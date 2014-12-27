@@ -18,14 +18,15 @@ if __name__ == '__main__' :
     s.listen(6)
     # print 'server is now listening ...\n'
     # server now keeps listening to clients' connection
-    client_list = [];
-    s.setblocking(0);#no wait
+    client_list = []
+    s.setblocking(0)    # no wait
     while True :
         try:
-            conn, addr  = s.accept()
-            client_list.append((conn,addr));
-        except:
-
-
+            conn, addr = s.accept()
+            client_list.append((conn,addr))
+        except socket.timeout as msg :
+            print 'no new client'
+        for client in client_list :
+            try socket
 
     s.close()
