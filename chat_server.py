@@ -73,6 +73,6 @@ def broadcast(server_socket, sock, message) :
                 if socket in SOCKET_LIST :
                     SOCKET_LIST.remove(socket)
  
-if __name__ == "__main__" :
+if __name__ == '__main__' :
 
     sys.exit(chat_server())
