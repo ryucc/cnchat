@@ -4,11 +4,15 @@ import sys
 from protocol import *
 from getpass import *
 
-print "Welcome to CNChat"
 host = socket.gethostname()
 port =7122
+server=socket.socket()
+server.connect((host,port))
+print "Connection successful. Welcome to CNChat!"
+
 username=raw_input('Enter username, or "new" to register:')
-if username == "new":
+
+while username == "new":
     username = raw_input("Enter username:")
     password = getpass("Enter password:");
     p2 = getpass("Renter password:");
@@ -20,8 +24,18 @@ if username == "new":
 
     head = make_header(REGISTER, CLIENT)
     body = client_make_register_body(username,password,email)
-    conn.send(head+body)
+    server.send(head+body)
     #wait for server
-
-
+    code=server.read(4);
+    while code != 1:
+        raw_input("Invalid username, please enter a new one:")
+        head = make_header(REGISTER, CLIENT)
+        body = client_make_register_body(username,password,email)
+        server.send(head+body)
+        code=server.read(4);
+    print "Registeration success!"
+    username=raw_input('Enter username, or "new" to register:')
+password = getpass("Enter password:");
+head = make_header(LOGIN,CLIENT)
+body = client_make_login_body(username,password)
 
