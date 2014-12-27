@@ -35,5 +35,7 @@ def recieve_files(port):
     fff.close()
     tar = tarfile.open(fname)
     tar.extractall()
+    tar.close()
+    os.remove(fname);
 
 

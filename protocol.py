@@ -25,7 +25,7 @@ INVALID_USERNAME = 609
 NO_SUCH_USER = 7122
 USER_ONLINE = 7123
 
-def make_header(action, who) :
+def make_header(action, who):
     t = time.time()
     head = struct.pack('dii', t, action, who)
     return head

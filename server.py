@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import socket
 import protocol     # self-defined module
 
@@ -16,9 +17,15 @@ if __name__ == '__main__' :
 
     s.listen(6)
     # print 'server is now listening ...\n'
-
     # server now keeps listening to clients' connection
+    client_list = [];
+    s.setblocking(0);#no wait
     while True :
+        try:
+            conn, addr  = s.accept()
+            client_list.append((conn,addr));
+        except:
+
 
 
     s.close()
