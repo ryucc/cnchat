@@ -18,7 +18,10 @@ if __name__ == '__main__' :
     # print 'server is now listening ...\n'
 
     # server now keeps listening to clients' connection
+    client_list = []
     while True :
-
+        conn, addr = s.accept()
+        client_list.append((conn, addr))
+        
 
     s.close()
