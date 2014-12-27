@@ -4,10 +4,16 @@ import sys
 from protocol import *
 from getpass import *
 from subprocess import *
+from login import *
 
-print "Welcome to CNChat"
-host = socket.gethostname()
-port = 7122
+# Connect to server and login
+host = 'linux8.csie.ntu.edu.tw'
+port = 50002
+server=socket.socket()
+server.connect((host,port))
+login(server)
+
+# Init
 rc = 0
 cmdbase = ['python', 'clientsh.py']
 
@@ -17,24 +23,10 @@ while rc != 255:
     cmd = cmdbase + cmd
     # Run sbuprocess command
     child = Popen(cmd)
-    data = child.communicate()[0]
+    child.wait()
+    data = child.communicate()[1]
     print data
     rc = child.returncode
 
-'''
-if username == "new":
-    username = raw_input("Enter username:")
-    password = getpass("Enter password:");
-    p2 = getpass("Renter password:");
-    if password != p2:
-        print "Password mismatch, please try again"
-        password = getpass("Enter password:");
-        p2 = getpass("Renter password:")
-    email = raw_input("Enter email:")
 
-    head = make_header(REGISTER, CLIENT)
-    body = client_make_register_body(username,password,email)
-    conn.send(head+body)
-    #wait for server
-'''
 
