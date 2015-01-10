@@ -11,4 +11,19 @@ conn, addr = s.accept()
 while 1:
     aaa=conn.recv(8+4+4)
     print struct.unpack('dii',aaa)
-    conn.send(struct.pack('i',1))
+    aaa=conn.recv(4)
+    ulen=struct.unpack('i',aaa)
+    aaa=conn.recv(ulen[0])
+    print aaa
+    username=struct.unpack('s',aaa)
+    print ulen[0]
+    print username
+    aaa=conn.recv(4)
+    plen=struct.unpack('i',aaa)
+    password=conn.recv(plen[0])
+    print password
+    aaa=conn.recv(4)
+    mlen=struct.unpack('i',aaa)
+    mail=conn.recv(mlen[0])
+    print mail
+    conn.send(struct.pack('i',1));

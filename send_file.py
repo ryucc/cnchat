@@ -6,11 +6,12 @@ import os
 def send_files(file_list,host,port):
     t= int(time.time())
     fname = str(t)+".tar.gz"
-    tar = tarfile.open(fname)
+    tar = tarfile.open(fname,'w:gz')
     for fff in file_list:
         tar.add(fff)
     tar.close()
     tf = open(fname,'r')
+    s = socket.socket()
     s.connect((host, port))
     buff = tf.read(4096)
     while buff:
@@ -21,17 +22,17 @@ def send_files(file_list,host,port):
 def recieve_files(port):
     t= int(time.time())
     fname = str(t)+".tar.gz"
-    fff=open(fname,'r')
+    fff=open(fname,'w')
     s=socket.socket()
     host = socket.gethostname()
     s.bind((host,port));
+    print host
     s.listen(2)
-    while 1:
-        c,addr = s.accept()
+    c,addr = s.accept()
+    st = c.recv(4096)
+    while st:
+        fff.write(st)
         st = c.recv(4096)
-        while st:
-            fff.write(st)
-        break;
     fff.close()
     tar = tarfile.open(fname)
     tar.extractall()
