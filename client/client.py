@@ -7,7 +7,7 @@ import curses
 import time
 from getpass import *
 from subprocess import *
-#from protocol import * # Define CNChat protocols and APIs
+from protocol import * # Define CNChat protocols and APIs
 from login import * # Login and register process
 from clientkernal import * # Client kernal function
 
@@ -43,7 +43,7 @@ WINY = 15
 # host = "linux8.csie.ntu.edu.tw"
 
 # host = socket.gethostname() # localhost
-host = "linux1.csie.ntu.edu.tw"
+host = "linux2.csie.ntu.edu.tw"
 port = 9009
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.settimeout(5)
@@ -88,13 +88,50 @@ while True:
             cmdlist = cmd_input.split(' ')
             cmdlist = cmdbase + cmdlist
             rc, msg = command_server_normal(cmdlist)
+            
             if rc == RC_MSG:
                 sys.stdout.write('\n' + msg)
                 sys.stdout.flush()
+            
             elif rc == RC_ERR:
                 sys.stdout.write('\n' + "Error: " + msg)
                 sys.stdout.flush()
+            
+            elif rc == RC_FILE:
+                # file message
+                print msg
+                filemsg = msg.split(" ")
+                fileservername = filemsg[0]
+                fileip = filemsg[1]
+                fileport = filemsg[2]
+                filename = filemsg[3]
+                filename = "receive.txt"
 
+                # open socket
+                print "Connect to server..."
+                fileserver = socket.socket()
+                fileserver.settimeout(2)
+                fileserver.connect((fileip, int(fileport)))
+                filesocklist = [fileserver]
+                print "Before select..."
+                ready_to_read, ready_to_write, ready_to_error = select.select(filesocklist, [], [], 1)
+                while len(ready_to_read) == 0:
+                    ready_to_read, ready_to_write, ready_to_error = select.select(filesocklist, [], [], 1)
+                
+                print "Open file..."
+                # open file
+                fp = open(filename, "w")
+                buf = fileserver.recv(4096)
+                while buf:
+                    fp.write(buf)
+                    fp.flush()
+                    try:
+                        buf = fileserver.recv(4096)
+                    except:
+                        break
+                        pass
+                        
+                fp.close() 
 
         else:
             # Command handle
@@ -118,8 +155,10 @@ while True:
             #  RC_GRP:    change to group message mode
             if rc == RC_MSG:
                 server.send(msg)
+            
             elif rc == RC_ERR:
                 sys.stdout.write("Error: " + msg)
+            
             elif rc == RC_LOGOUT:
                 os.system('clear')
                 logoutfile = open("./logout.txt", "r")
@@ -129,18 +168,53 @@ while True:
                 msg = "logout \n"
                 server.send(msg)
                 sys.exit(0) 
+            
             elif rc == RC_NOR:
                 if status == SGRP:
                     msg = "leave_group " + group + '\n'
                     server.send(msg)
                 status = SNOR
+            
             elif rc == RC_PER:
                 status = SPER
                 person = msg
+            
             elif rc == RC_GRP:
                 status = SGRP
                 group = msg
-           
+                server.send("enter_group " + group + '\n')
+
+            elif rc == RC_FILE:
+
+                # file message
+                print msg
+                filemsg = msg.split(" ")
+                fileclient = filemsg[0]
+                fileport = filemsg[1]
+                filename = filemsg[2]
+                filename = filename[0:len(filename)-1]
+                server.send("file " + fileclient + " " + fileport + " " + filename)
+                
+                print "Start send file: " + filename
+                # file server
+                fileserver = socket.socket()
+                fileserver.bind((socket.gethostname(), int(fileport)))
+                fileserver.listen(1)
+                fileclient, clientaddr = fileserver.accept()
+                
+                print "Open file..."
+                # open file
+                fp = open(filename, "r")
+                buf = fp.read(4096)
+                while buf:
+                    fileclient.send(buf)
+                    buf = fp.read(4096)
+                fileclient.send(buf)
+                fp.close()
+
+                print "Finish sending file"
+
+
         # next command line message
         if status == SNOR:
             command_line("")
