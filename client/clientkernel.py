@@ -1,5 +1,4 @@
 from getpass import *
-from protocol import *
 import os
 
 # define return code
