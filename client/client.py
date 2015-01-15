@@ -8,7 +8,7 @@ import time
 from getpass import *
 from subprocess import *
 from login import * # Login and register process
-from clientkernal import * # Client kernal function
+from clientkernel import * # Client kernal function
 
 
 # define status code
