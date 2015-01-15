@@ -1,6 +1,7 @@
 class User_Class:
-    def __init__(self,name):
+    def __init__(self,name,password):
         self.Name = name
+        self.Password =  password
         self.Status = "offline" #register & not online
 
 class Client_class:
