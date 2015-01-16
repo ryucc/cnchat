@@ -1,0 +1,13 @@
+*************************************************
+*                                               *
+*          Thanks for using CNChat [31m^[33m_[35m^[0m          *
+*                                               *
+*                                               *
+*    Developer:                                 *
+*                                               *
+*       Jerry Chou, Andy Chung, Kurtis Liu      *
+*                                               *
+*        CSIE @ National Taiwan University      *
+*                                               *
+*************************************************
+
