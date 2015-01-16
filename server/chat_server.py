@@ -273,10 +273,26 @@ def chat_server(port):
                                     sock.send(client.Username+"\r\n")
                         elif Message.Type == "all_users":
                             string = ""
+                            flag = 0
+                            for client in CLIENT_LIST:
+                                if client.Sock == sock:
+                                    if client.Username == "admin":
+                                        flag = 1
+                                    break
+                            if flag == 0:
+                                continue
                             for client in CLIENT_LIST:
                                 string = client.Username +" "+string
                             sock.send(string)
                         elif Message.Type == "kick":
+                            flag = 0
+                            for client in CLIENT_LIST:
+                                if client.Sock == sock:
+                                    if client.Username == "admin":
+                                        flag = 1
+                                    break
+                            if flag == 0:
+                                continue
                             for client in CLIENT_LIST:
                                 if client.Username == Message.Username:
                                     CLIENT_LIST.remove(client)
