@@ -6,7 +6,7 @@ from getpass import *
 
 def client_start(server):
     while 1:
-        print "login or register(login/register)?"
+        print "login or register([34mlogin[0m/[34mregister[0m)?"
         sys.stdout.write("> ")
         sys.stdout.flush()
         cmd_input = sys.stdin.readline()
@@ -22,7 +22,7 @@ def client_start(server):
             name = loginorregister(server, cmd)
             continue
         else:
-            print "No such command"
+            print "[31mNo such command[0m"
     return name
 
 def loginorregister(server, cmd):
@@ -37,7 +37,7 @@ def loginorregister(server, cmd):
         username = username[0:len(username)-1]
 
         if len(name_list) != 1:
-            print "Invalid username!"
+            print "[31mInvalid username![0m"
             continue 
         if cmd == "register\n":
             msg = "register " + username + ' '+ password + '\n'
@@ -47,7 +47,6 @@ def loginorregister(server, cmd):
         #wait for server
         server.setblocking(1)
         code = server.recv(1024)
-        print code
         if code == "registerok\n":
             print "Registeration success!"
             return name_list[0]
@@ -57,7 +56,18 @@ def loginorregister(server, cmd):
             return name_list[0]
             break;
         else:
-            print "Invalid username!"
+            print "[31mInvalid username![0m"
+
+        sys.stdout.write("Try again?([30m[0my/[3mn[0m): ")
+        sys.stdout.flush()
+        again_input = sys.stdin.readline()
+        if again_input != "y\n":
+            os.system('clear')
+            logoutfile = open("./logout.txt", "r")
+            sys.stdout.write(logoutfile.read())
+            sys.stdout.flush()
+            logoutfile.close()
+            sys.exit(0) 
 
 def client_welcome(name):
     os.system("clear")

@@ -10,6 +10,7 @@ RC_NOR = 1004
 RC_PER = 1005
 RC_GRP = 1006
 RC_FILE = 1007
+RC_HELP = 1008
 
 # define message types
 MSG_PER = 2000
@@ -91,39 +92,66 @@ def command_user_normal(*argvar):
     cmd = cmdlist[2]
     argnum = len(cmdlist)-2
 
+    # help command
+    help_flag = 0
+    if cmd == "help":
+        if argnum != 2:
+            msg = "The number of aruments for help command should be 2\n"
+            return (RC_ERR, msg)
+        cmd = cmdlist[3]
+        help_flag = 1
+
     # command handle
-    if cmd == "hello":
+    if cmd == "hello" or cmd == "hello\n":
         if argnum != 2:
             msg = "The number of aruments for hello command should be 2\n"
             return (RC_ERR, msg)
         msg = hello_command(cmdlist[3])
     
-    elif cmd == "knock":
+    elif cmd == "knock" or cmd == "knock\n":
+        if help_flag:
+            return (RC_HELP, "knock [username]")
+        
         if argnum != 2:
             msg = "The number of aruments for knock command should be 2\n"
             return (RC_ERR, msg)
         msg = knock_command(cmdlist[3])
     
     elif cmd == "clear\n":
+        if help_flag:
+            return (RC_HELP, "clear")
+        
         msg = clear_command()
         return (RC_NMSG, msg)
     
     elif cmd == "logout\n":
+        if help_flag:
+            return (RC_HELP, "logout")
+        
         msg = logout_command()
         return (RC_LOGOUT, msg)
     
     elif cmd == "quit\n":
+        if help_flag:
+            return (RC_HELP, "quit")
+        
         msg = "Do you mean logout?\n"
         return (RC_ERR, msg)
     
-    elif cmd == "msg":
+    elif cmd == "msg" or cmd == "msg\n":
+        if help_flag:
+            return (RC_HELP, "msg [username]")
+        
         if argnum != 2:
             msg = "The number of aruments for msg command should be 2\n"
             return (RC_ERR, msg)
         msg = startmsg_command(cmdlist[3][0:len(cmdlist[3])-1]) # throw away \n
         return (RC_PER, msg)
     
-    elif cmd == "group":
+    elif cmd == "group" or cmd == "group\n":
+        if help_flag:
+            return (RC_HELP, "group [groupname]")
+        
         if argnum != 2:
             msg = "The number of aruments for group command should be 2\n"
             return (RC_ERR, msg)
@@ -131,7 +159,10 @@ def command_user_normal(*argvar):
         return (RC_GRP, msg)
    
     # file user port filename
-    elif cmd == "file":
+    elif cmd == "file" or cmd == "file\n":
+        if help_flag:
+            return (RC_HELP, "file [username] [port] [filename]")
+        
         if argnum != 4:
             msg = "The number of aruments for file command should be 4\n"
             return (RC_ERR, msg)
@@ -142,12 +173,36 @@ def command_user_normal(*argvar):
         msg = ls_command()
         return (RC_NMSG, msg)
     
-    elif cmd == "cat":
+    elif cmd == "cat" or cmd == "cat\n":
+        if help_flag:
+            return (RC_HELP, "cat [filename]")
+        
         if argnum != 2:
             msg = "The number of aruments for cat command should be 2\n"
             return (RC_ERR, msg)
         msg = cat_command(cmdlist[3])
         return (RC_NMSG, msg)
+
+    elif cmd == "online\n":
+        if help_flag:
+            return (RC_HELP, "online")
+        msg = "allonline\n"
+        return (RC_MSG, msg)
+        
+    elif cmd == "all\n": 
+        if help_flag:
+            return (RC_HELP, "all")
+        msg = "alluser\n"
+        return (RC_MSG, msg)
+
+    elif cmd == "bcast" or "bcast\n":
+        if help_flag:
+            return (RC_HELP, "bcast [msg]")
+
+        msg = "broadcast"
+        for str in cmdlist[3:len(cmdlist)]:
+            msg += " " + str
+        msg += "\n"
 
     else:
         msg = "No such command!\n"
@@ -248,6 +303,16 @@ def command_server_normal(*argvar):
     elif cmd == "file":
         msg = cmdlist[3] + " " + cmdlist[4] + " " + cmdlist[5] + " " + cmdlist[6]
         return (RC_FILE, msg)
+
+    elif cmd == "alluser":
+        msg = ""
+        for name in cmdlist[3:len(cmdlist)]:
+            msg += name + "\n"
+    
+    elif cmd == "allonline":
+        msg = ""
+        for name in cmdlist[3:len(cmdlist)]:
+            msg += name + "\n"
 
     else:
         msg = "Server: " + cmd

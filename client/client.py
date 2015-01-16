@@ -17,7 +17,12 @@ SPER = 2001
 SGRP = 2002
 
 def command_line(str):
-    sys.stdout.write("[31m" + str + "[0m"  + "> ")
+    if status == SPER:
+        sys.stdout.write("[31m" + str + "[0m"  + "> ")
+    elif status == SGRP:
+        sys.stdout.write("[32m" + str + "[0m"  + "> ")
+    else:
+        sys.stdout.write("> ")
     sys.stdout.flush()
     # win.addstr(str)
     # win.refresh()
@@ -42,8 +47,8 @@ WINY = 15
 # host = "linux8.csie.ntu.edu.tw"
 
 # host = socket.gethostname() # localhost
-host = "linux2.csie.ntu.edu.tw"
-port = 9009
+host = "linux1.csie.ntu.edu.tw"
+port = 9049
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.settimeout(5)
 try:
@@ -156,7 +161,7 @@ while True:
                 server.send(msg)
             
             elif rc == RC_ERR:
-                sys.stdout.write("Error: " + msg)
+                sys.stdout.write("[34mError: [0m" + msg)
             
             elif rc == RC_LOGOUT:
                 os.system('clear')
@@ -213,6 +218,9 @@ while True:
 
                 print "Finish sending file"
 
+            elif rc == RC_HELP:
+                print msg
+               
 
         # next command line message
         if status == SNOR:
