@@ -47,8 +47,14 @@ WINY = 15
 # host = "linux8.csie.ntu.edu.tw"
 
 # host = socket.gethostname() # localhost
-host = "linux2.csie.ntu.edu.tw"
-port = 9049
+if len(sys.argv) < 3:
+    host = "linux2.csie.ntu.edu.tw"
+    port = 9049
+else:
+    print "host = "+sys.argv[1]
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.settimeout(5)
 try:
@@ -114,7 +120,7 @@ while True:
                 # open socket
                 print "Connect to server..."
                 fileserver = socket.socket()
-                fileserver.settimeout(10)
+                fileserver.settimeout(2)
                 fileserver.connect((fileip, int(fileport)))
                 filesocklist = [fileserver]
                 print "Before select..."
