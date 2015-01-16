@@ -283,7 +283,7 @@ def chat_server(port):
                                 continue
                             for client in CLIENT_LIST:
                                 string = client.Username +" "+string
-                            sock.send(string)
+                            sock.send(string+"\n")
                         elif Message.Type == "kick":
                             flag = 0
                             for client in CLIENT_LIST:
@@ -291,11 +291,15 @@ def chat_server(port):
                                     if client.Username == "admin":
                                         flag = 1
                                     break
-                            print "admin kick "+Message.Username
                             if flag == 0:
                                 continue
+                            print "admin kick "+Message.Username
+                            print len(Message.Username)
                             for client in CLIENT_LIST:
+                                print client.Username
+                                print len(client.Username)
                                 if client.Username == Message.Username:
+                                    print "kick "+ client.Username
                                     SOCKET_LIST.remove(client.Sock)
                                     client.Sock.close()
                                     CLIENT_LIST.remove(client)
