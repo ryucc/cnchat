@@ -114,7 +114,7 @@ while True:
                 # open socket
                 print "Connect to server..."
                 fileserver = socket.socket()
-                fileserver.settimeout(2)
+                fileserver.settimeout(10)
                 fileserver.connect((fileip, int(fileport)))
                 filesocklist = [fileserver]
                 print "Before select..."

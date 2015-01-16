@@ -314,6 +314,13 @@ def command_server_normal(*argvar):
         for name in cmdlist[3:len(cmdlist)]:
             msg += name + "\n"
 
+    elif cmd == "broadcast":
+        name = cmdlist[3]
+        msg = "[36m" + name + " [0m" + ">"
+        for i in xrange(4,len(cmdlist)-1):
+            msg += ' ' + cmdlist[i]
+        msg += " " + cmdlist[len(cmdlist)-1]
+    
     else:
         msg = "Server: " + cmd
         return (RC_MSG, msg)
