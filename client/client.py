@@ -47,7 +47,7 @@ WINY = 15
 # host = "linux8.csie.ntu.edu.tw"
 
 # host = socket.gethostname() # localhost
-host = "linux1.csie.ntu.edu.tw"
+host = "linux2.csie.ntu.edu.tw"
 port = 9049
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.settimeout(5)

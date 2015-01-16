@@ -19,6 +19,13 @@ class Parse:
             self.Username = raw_string[space+1:second_space]
             self.Password = raw_string[second_space+1:newline]
 
+        elif self.Type == "kick":
+            second_space = raw_string.find(' ',space+1)
+            newline = raw_string.find('\r\n')
+            if newline == -1:
+                newline = raw_string.find('\n')
+            self.Username = raw_string[space+1:second_space]
+            
         elif self.Type == "register":
             second_space = raw_string.find(' ',space+1)
             newline = raw_string.find('\r\n')

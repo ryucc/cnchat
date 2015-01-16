@@ -271,6 +271,40 @@ def chat_server(port):
                                 if client.Sock == sock:
                                     print client.Username
                                     sock.send(client.Username+"\r\n")
+                        elif Message.Type == "all_users":
+                            string = ""
+                            flag = 0
+                            for client in CLIENT_LIST:
+                                if client.Sock == sock:
+                                    if client.Username == "admin":
+                                        flag = 1
+                                    break
+                            if flag == 0:
+                                continue
+                            for client in CLIENT_LIST:
+                                string = client.Username +" "+string
+                            sock.send(string)
+                        elif Message.Type == "kick":
+                            flag = 0
+                            for client in CLIENT_LIST:
+                                if client.Sock == sock:
+                                    if client.Username == "admin":
+                                        flag = 1
+                                    break
+                            if flag == 0:
+                                continue
+                            for client in CLIENT_LIST:
+                                if client.Username == Message.Username:
+                                    CLIENT_LIST.remove(client)
+                            for i in range(0,len(USER_LIST)):
+                                if USER_LIST[i].Name == Message.Username:
+                                    USER_LIST[i].Status = "broken"
+                                    break
+                            for group in GROUP_LIST:
+                                if Message.Username in group.Members:
+                                    group.Members.remove(name)
+                            sock.close()
+                            SOCKET_LIST.remove(sock)
                     
                         elif Message.Type == "broadcast":
                             flag = 0
