@@ -114,7 +114,7 @@ def chat_server(port):
                                     flag = flag + 2
                             if flag == 3:
                                 # duplicate login bug
-                                Message.Message = F.flit(Message.Message)
+                                Message.Message = F.filt(Message.Message)
                                 reciver.Sock.send("msg "+sender.Username+" "+Message.Message+"\n")
                             else:
                                 sock.send("msgnotok "+Message.Username+" "+Message.Message+"\n")
@@ -247,13 +247,43 @@ def chat_server(port):
                             #undefined
                             #else:
                             #    sock.send("notonline\n");
+                        
+                        
+                        elif Message.Type == "alluser":
+                            flag = 1
+                            msg = "alluser"
+                            for user in USER_LIST:
+                                msg += " " + user.Name
+                            msg += "\n"
+                            sock.send(msg)
 
+                        elif Message.Type == "allonline":
+                            flsg = 1
+                            msg = "allonline"
+                            for user in USER_LIST:
+                                if user.Status == "online":
+                                    msg += " " + user.Name
+                            msg += "\n"
+                            sock.send(msg)
 
                         elif Message.Type == "whoami":
                             for client in CLIENT_LIST:
                                 if client.Sock == sock:
                                     print client.Username
                                     sock.send(client.Username+"\r\n")
+                    
+                        elif Message.Type == "broadcast":
+                            flag = 0
+                            sender = 0
+                            for client in CLIENT_LIST:
+                                if client.Sock == sock:
+                                    sender = client
+                                    flag = flag + 1
+                            
+                            Message.Message = F.filt(Message.Message)
+                            for client in CLIENT_LIST:
+                                client.Sock.send("broadcast "+sender.Username+" "+Message.Message+"\n")
+                    
                     else:
                         print "broken"
                         name = ""
@@ -299,7 +329,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         PORT = int(sys.argv[1])
     else:
-        PORT = 9009
+        PORT = 9049
     try:
         sys.exit(chat_server(PORT))
     except KeyboardInterrupt:

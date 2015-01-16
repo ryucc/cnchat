@@ -74,5 +74,13 @@ class Parse:
             self.Username = raw_string[space+1:second_space]
             self.Port = raw_string[second_space+1:third_space]
             self.Filename = raw_string[third_space+1:newline]
+        
+        elif self.Type == "broadcast":
+            second_space = raw_string.find(' ',space+1)
+            newline = raw_string.find('\r\n')
+            if newline == -1:
+                newline = raw_string.find('\n')
+            self.Username = raw_string[space+1:second_space]
+            self.Message = raw_string[second_space+1:newline]
 
 
