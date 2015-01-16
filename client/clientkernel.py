@@ -92,6 +92,8 @@ def command_user_normal(*argvar):
     cmd = cmdlist[2]
     argnum = len(cmdlist)-2
 
+    print "cmd:" + cmd
+
     # help command
     help_flag = 0
     if cmd == "help":
@@ -195,7 +197,8 @@ def command_user_normal(*argvar):
         msg = "alluser\n"
         return (RC_MSG, msg)
 
-    elif cmd == "bcast" or "bcast\n":
+    elif cmd == "bcast":
+        print "in bcast"
         if help_flag:
             return (RC_HELP, "bcast [msg]")
 
@@ -203,6 +206,9 @@ def command_user_normal(*argvar):
         for str in cmdlist[3:len(cmdlist)]:
             msg += " " + str
         msg += "\n"
+
+    elif cmd == "\n":
+        return (RC_NMSG, "")
 
     else:
         msg = "No such command!\n"
