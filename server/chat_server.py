@@ -291,20 +291,21 @@ def chat_server(port):
                                     if client.Username == "admin":
                                         flag = 1
                                     break
+                            print "admin kick "+Message.Username
                             if flag == 0:
                                 continue
                             for client in CLIENT_LIST:
                                 if client.Username == Message.Username:
+                                    SOCKET_LIST.remove(client.Sock)
+                                    client.Sock.close()
                                     CLIENT_LIST.remove(client)
                             for i in range(0,len(USER_LIST)):
                                 if USER_LIST[i].Name == Message.Username:
-                                    USER_LIST[i].Status = "broken"
+                                    USER_LIST[i].Status = "offline"
                                     break
                             for group in GROUP_LIST:
                                 if Message.Username in group.Members:
                                     group.Members.remove(name)
-                            sock.close()
-                            SOCKET_LIST.remove(sock)
                     
                         elif Message.Type == "broadcast":
                             flag = 0
