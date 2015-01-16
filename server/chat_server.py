@@ -282,6 +282,7 @@ def chat_server(port):
                             
                             Message.Message = F.filt(Message.Message)
                             for client in CLIENT_LIST:
+                                print "bcast: " + client.Username + " " + Message.Message
                                 client.Sock.send("broadcast "+sender.Username+" "+Message.Message+"\n")
                     
                     else:
